@@ -1,11 +1,25 @@
 class SubmissionsController < ApplicationController
   def create
-    submission = Submission.create(user_id: params[:user_id], code: params[:code], room_id: params[:room_id])
+    submission = Submission.find_or_create_by(user_id: params[:user_id], room_id: params[:room_id])
+
+    submission.update(code: params[:code])
+
     if submission
-      RoomsChannel.broadcast_to(submission.room, { type: "SUBMISSION_CREATED", payload: SubmissionSerializer.new(submission) })
+      RoomsChannel.broadcast_to(submission.room, { type: "SUBMISSION_CREATED", payload: SubmissionSerializer.new(submission)})
       render json: submission, status: :created
     else
       render json: { error: "Error in submission" }, status: :bad_request
     end
+  end
+
+  def destroy
+    submission = Submission.find_by(user_id: params[:user_id], room_id: params[:room_id])
+
+
+    RoomsChannel.broadcast_to(submission.room, { type: "SUBMISSION_DELETED", payload: submission.user.username})
+
+    submission.destroy
+
+    render json: {message: "SUCCESS"}
   end
 end
