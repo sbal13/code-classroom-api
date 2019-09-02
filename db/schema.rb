@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_29_191405) do
+ActiveRecord::Schema.define(version: 2019_08_30_183712) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cohorts", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "rooms", force: :cascade do |t|
     t.string "language"
@@ -21,6 +27,8 @@ ActiveRecord::Schema.define(version: 2019_08_29_191405) do
     t.string "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "cohort_id"
+    t.index ["cohort_id"], name: "index_rooms_on_cohort_id"
   end
 
   create_table "submissions", force: :cascade do |t|
@@ -33,6 +41,15 @@ ActiveRecord::Schema.define(version: 2019_08_29_191405) do
     t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
+  create_table "user_cohorts", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "cohort_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id"], name: "index_user_cohorts_on_cohort_id"
+    t.index ["user_id"], name: "index_user_cohorts_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "password_digest"
@@ -43,4 +60,6 @@ ActiveRecord::Schema.define(version: 2019_08_29_191405) do
 
   add_foreign_key "submissions", "rooms"
   add_foreign_key "submissions", "users"
+  add_foreign_key "user_cohorts", "cohorts"
+  add_foreign_key "user_cohorts", "users"
 end

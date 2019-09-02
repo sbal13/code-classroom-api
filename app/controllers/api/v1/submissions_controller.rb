@@ -1,6 +1,8 @@
-class SubmissionsController < ApplicationController
+class Api::V1::SubmissionsController < ApplicationController
+  before_action :authorize, only: [:create, :destroy]
+
   def create
-    submission = Submission.find_or_create_by(user_id: params[:user_id], room_id: params[:room_id])
+    submission = Submission.find_or_create_by(user_id: session_user.id, room_id: params[:room_id])
 
     submission.update(code: params[:code])
 

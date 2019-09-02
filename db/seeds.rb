@@ -8,6 +8,20 @@ end
 
 languages = ["Ruby", "Javascript"]
 
-30.times do
-  Room.create(name: Faker::Color.color_name + "-" + Faker::Creature::Animal.unique.name, language: languages.sample)
+cohorts = [
+  {name: "nyc-web-071519"},
+  {name: "london-web-042219"},
+  {name: "dumbo-web-040119"}
+]
+
+cohorts.each do |cohort|
+  c = Cohort.create(cohort)
+
+  3.times do
+    Room.create(
+      name: Faker::Color.color_name + "-" + Faker::Creature::Animal.unique.name, 
+      language: languages.sample,
+      cohort: c
+    )
+  end
 end
