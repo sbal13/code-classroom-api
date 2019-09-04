@@ -30,4 +30,8 @@ class ApplicationController < ActionController::API
       render json: {errors: "Invalid token"}, status: 403
     end
   end
+
+  def admin?
+    session_user.admin
+  end
 end

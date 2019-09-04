@@ -1,3 +1,3 @@
 class CohortSerializer < ActiveModel::Serializer
-  attributes :id, :name
+  attributes :id, :name, :rooms
 end

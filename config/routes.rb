@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       post '/login', to: 'auth#login'
       get '/auto_login', to: "auth#auto_login"
+
+      patch '/join_cohort/:id', to: "cohorts#join_cohort"
       
       resources :cohorts
       resources :users
